@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>🌿 Romantic Birthday Forest</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --forest-deep:#081c15;
+  --forest-mid:#1b4332;
+  --forest-light:#2d6a4f;
+  --forest-soft:#40916c;
+  --forest-pale:#d8f3dc;
+
+  --pink:#ff4d6d;
+  --pink-soft:#ff8fab;
+
+  --cream:#f8f9fa;
+  --glass:rgba(255,255,255,0.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#081c15;
+  font-family:'Lato',sans-serif;
+  color:white;
+}
+
+/* =========================================
+BACKGROUND
+========================================= */
+
+#bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+
+  background:
+  radial-gradient(circle at top,#1b4332 0%,#081c15 65%);
+}
+
+#bg::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+
+  background:
+  radial-gradient(circle at 20% 30%,rgba(64,145,108,.18),transparent 25%),
+  radial-gradient(circle at 80% 20%,rgba(255,77,109,.12),transparent 25%),
+  radial-gradient(circle at 50% 70%,rgba(216,243,220,.12),transparent 35%);
+
+  animation:aurora 18s linear infinite alternate;
+}
+
+@keyframes aurora{
+  from{
+    transform:translateX(-2%) translateY(0) scale(1);
+  }
+  to{
+    transform:translateX(2%) translateY(-2%) scale(1.05);
+  }
+}
+
+/* floating leaves */
+
+.float-item{
+  position:absolute;
+  bottom:-60px;
+  pointer-events:none;
+  opacity:0;
+  animation:floatUp linear infinite;
+  will-change:transform,opacity;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.15));
+}
+
+@keyframes floatUp{
+  0%{
+    transform:translateY(0) rotate(0deg);
+    opacity:0;
+  }
+
+  10%{
+    opacity:.7;
+  }
+
+  100%{
+    transform:
+      translateY(-120vh)
+      translateX(50px)
+      rotate(360deg);
+
+    opacity:0;
+  }
+}
+
+/* =========================================
+SLIDER
+========================================= */
+
+#slider{
+  position:relative;
+  width:100%;
+  height:100vh;
+  z-index:5;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  opacity:0;
+  pointer-events:none;
+
+  transform:scale(1.05);
+
+  transition:
+  opacity 1.2s cubic-bezier(0.22,1,0.36,1),
+  transform 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+.slide.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1);
+}
+
+/* =========================================
+NAV
+========================================= */
+
+.nav{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:100;
+
+  width:50px;
+  height:50px;
+
+  border:none;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(12px);
+
+  color:white;
+  font-size:1.3rem;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+.nav:hover{
+  transform:translateY(-50%) scale(1.1);
+  background:rgba(255,255,255,.2);
+}
+
+#prev{
+  left:16px;
+}
+
+#next{
+  right:16px;
+}
+
+body.locked .nav{
+  display:none;
+}
+
+/* =========================================
+DOTS
+========================================= */
+
+#dots{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  z-index:100;
+
+  display:flex;
+  gap:10px;
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.35);
+
+  cursor:pointer;
+  transition:.3s;
+}
+
+.dot.active{
+  background:white;
+  transform:scale(1.35);
+}
+
+/* =========================================
+SLIDE 1
+========================================= */
+
+#s1{
+  flex-direction:column;
+  text-align:center;
+}
+
+.title{
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  opacity:.8;
+  margin-bottom:28px;
+}
+
+#game{
+  position:relative;
+  width:430px;
+  height:300px;
+
+  border-radius:24px;
+
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(255,255,255,.08),
+    rgba(255,255,255,.03)
+  );
+
+  backdrop-filter:blur(10px);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+  0 20px 40px rgba(0,0,0,.35),
+  inset 0 0 40px rgba(255,255,255,.02);
+}
+
+.target{
+  position:absolute;
+  cursor:pointer;
+  user-select:none;
+
+  font-size:2rem;
+
+  transition:.15s;
+}
+
+.target:hover{
+  transform:scale(1.2);
+}
+
+.score{
+  display:flex;
+  gap:8px;
+  margin-top:20px;
+}
+
+.score div{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+
+  border:1px solid rgba(255,255,255,.5);
+}
+
+.score .on{
+  background:#ff8fab;
+  border-color:#ff8fab;
+}
+
+/* =========================================
+PASSWORD
+========================================= */
+
+#passwordBox{
+  margin-top:28px;
+  display:none;
+  animation:fadeUp .8s ease;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+#pw{
+  padding:12px 18px;
+  border:none;
+  outline:none;
+
+  border-radius:30px;
+
+  width:180px;
+
+  text-align:center;
+  letter-spacing:4px;
+
+  background:white;
+}
+
+#openBtn{
+  padding:12px 18px;
+  border:none;
+
+  border-radius:30px;
+
+  background:#ff4d6d;
+  color:white;
+
+  cursor:pointer;
+
+  margin-left:10px;
+}
+
+/* =========================================
+TEXT SLIDES
+========================================= */
+
+.text-slide{
+  width:100%;
+  height:100%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:60px;
+
+  gap:50px;
+}
+
+.left{
+  flex:1;
+}
+
+.chapter{
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:16px;
+}
+
+.big{
+  font-family:'Dancing Script',cursive;
+  font-size:4rem;
+  line-height:1.1;
+  margin-bottom:20px;
+}
+
+.body{
+  line-height:1.9;
+  font-weight:300;
+  max-width:500px;
+}
+
+.right{
+  flex:1;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+}
+
+/* =========================================
+POLAROID
+========================================= */
+
+.polaroid{
+  width:170px;
+
+  background:white;
+  color:black;
+
+  padding:10px 10px 30px;
+
+  border-radius:6px;
+
+  transform:rotate(var(--r));
+
+  transition:.4s;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,.35);
+}
+
+.polaroid:hover .ph{
+  transform:scale(1.05);
+
+  filter:
+    contrast(1.1)
+    saturate(1.15);
+}
+
+.ph{
+  width:100%;
+  height:150px;
+
+  object-fit:cover;
+  object-position:center;
+
+  display:block;
+
+  border-radius:4px;
+
+  filter:
+    contrast(1.05)
+    saturate(1.08);
+
+  transition:
+    transform .5s ease,
+    filter .5s ease;
+}
+
+.caption{
+  text-align:center;
+  margin-top:10px;
+  font-family:'Dancing Script',cursive;
+  font-size:1.1rem;
+}
+
+/* =========================================
+CAKE SLIDE
+========================================= */
+
+#s4{
+  overflow:hidden;
+}
+
+#cakeWrap{
+  position:absolute;
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  transition:transform .15s linear;
+}
+
+#cakeTitle{
+  position:absolute;
+  top:40px;
+  left:50%;
+  transform:translateX(-50%);
+
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+
+  text-align:center;
+}
+
+#cakeHint{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+
+  opacity:.7;
+  font-size:.9rem;
+  letter-spacing:1px;
+
+  animation:blink 2s infinite;
+}
+
+@keyframes blink{
+  0%,100%{
+    opacity:.4;
+  }
+  50%{
+    opacity:1;
+  }
+}
+
+/* =========================================
+EXPLOSION
+========================================= */
+
+.explosion{
+  position:absolute;
+  pointer-events:none;
+  user-select:none;
+  font-size:2rem;
+}
+
+/* =========================================
+POPUP
+========================================= */
+
+#popup{
+  position:fixed;
+  inset:0;
+
+  display:none;
+  justify-content:center;
+  align-items:center;
+
+  background:rgba(0,0,0,.45);
+
+  backdrop-filter:blur(16px);
+
+  z-index:1000;
+}
+
+#popup.show{
+  display:flex;
+}
+
+.card{
+  width:min(90%,420px);
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(255,255,255,.12),
+    rgba(255,255,255,.05)
+  );
+
+  border:1px solid rgba(255,255,255,.12);
+
+  border-radius:30px;
+
+  padding:40px;
+
+  text-align:center;
+
+  box-shadow:
+  0 30px 80px rgba(0,0,0,.45);
+
+  animation:
+  popupIn .8s cubic-bezier(0.34,1.56,0.64,1),
+  heartbeat 3s ease infinite;
+}
+
+@keyframes popupIn{
+  from{
+    opacity:0;
+    transform:scale(.7);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+@keyframes heartbeat{
+  0%,100%{
+    transform:scale(1);
+  }
+  50%{
+    transform:scale(1.02);
+  }
+}
+
+.popup-title{
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+  margin-bottom:20px;
+}
+
+.close{
+  margin-top:24px;
+
+  border:none;
+
+  padding:12px 28px;
+
+  border-radius:30px;
+
+  background:#ff4d6d;
+  color:white;
+
+  cursor:pointer;
+}
+
+/* =========================================
+BURST FLOAT
+========================================= */
+
+.burst{
+  position:absolute;
+  bottom:0;
+  animation:burstFloat linear infinite;
+}
+
+@keyframes burstFloat{
+  0%{
+    transform:translateY(0) scale(.7);
+    opacity:0;
+  }
+
+  10%{
+    opacity:1;
+  }
+
+  100%{
+    transform:
+    translateY(-120vh)
+    rotate(360deg)
+    scale(1.4);
+
+    opacity:0;
+  }
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
+
+@media(max-width:768px){
+
+  .text-slide{
+    flex-direction:column;
+    padding:30px;
+  }
+
+  .big{
+    font-size:3rem;
+  }
+
+  #game{
+    width:340px;
+    height:240px;
+  }
+
+  .polaroid{
+    width:140px;
+  }
+
+  .ph{
+    height:120px;
+  }
+}
+
+</style>
+</head>
+
+<body class="locked">
+
+<!-- BG -->
+<div id="bg"></div>
+
+<!-- AUDIO -->
+<audio id="audio" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_c3523e414c.mp3" type="audio/mpeg">
+</audio>
+
+<!-- NAV -->
+<button class="nav" id="prev">‹</button>
+<button class="nav" id="next">›</button>
+
+<div id="dots"></div>
+
+<!-- =========================================
+SLIDER
+========================================= -->
+
+<div id="slider">
+
+  <!-- =========================================
+  SLIDE 1
+  ========================================= -->
+
+  <section class="slide active" id="s1">
+
+    <div class="title">
+      Click the Emoji to Fill 💕
+    </div>
+
+    <div class="subtitle">
+      Catch all 8 Emoji to unlock :D
+    </div>
+
+    <div id="game"></div>
+
+    <div class="score" id="score"></div>
+
+    <div id="passwordBox">
+      <div style="margin-bottom:14px">
+        Enter Secret Password ✨
+      </div>
+
+      <input id="pw" type="password" maxlength="10">
+
+      <button id="openBtn">
+        Open
+      </button>
+
+      <div id="err" style="margin-top:10px;color:#ff8fab"></div>
+    </div>
+
+  </section>
+
+  <!-- =========================================
+  SLIDE 2
+  ========================================= -->
+
+  <section class="slide">
+
+    <div class="text-slide">
+
+      <div class="left">
+
+        <div class="chapter">
+          Chapter One
+        </div>
+
+        <div class="big">
+          Hi My Favourite Person 🌸
+        </div>
+
+        <div class="body">
+          You make ordinary days feel magical.
+          Every laugh, every smile, every little moment with you feels precious.
+
+          <br><br>
+
+          Thank you for existing in my world 💖
+        </div>
+
+      </div>
+
+      <div class="right">
+
+        <div class="polaroid" style="--r:-4deg">
+          <img class="ph" src="foto1.jpg" alt="">
+          <div class="caption">always cute</div>
+        </div>
+
+      <div class="polaroid" style="--r:5deg">
+        <img class="ph" src="foto2.jpg" alt="">
+        <div class="caption">my happiness</div>
+      </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================================
+  SLIDE 3
+  ========================================= -->
+
+  <section class="slide">
+
+    <div class="text-slide">
+
+      <div class="left">
+
+        <div class="chapter">
+          Chapter Two
+        </div>
+
+        <div class="big">
+          Every Little Thing 🌿
+        </div>
+
+        <div class="body">
+          The way you laugh.
+          The way you care.
+          The way your eyes shine when you're happy.
+
+          <br><br>
+
+          Those little things are the reasons I fall for you over and over again.
+        </div>
+
+      </div>
+
+      <div class="right">
+
+        <div class="polaroid" style="--r:-5deg">
+          <img class="ph" src="foto3.jpg" alt="">
+          <div class="caption">sunshine</div>
+        </div>
+
+        <div class="polaroid" style="--r:4deg">
+          <img class="ph" src="foto4.jpg" alt="">
+          <div class="caption">golden hour</div>
+        </div>
+
+        <div class="polaroid" style="--r:-2deg">
+          <img class="ph" src="foto5.jpg" alt="">
+          <div class="caption">our world</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================================
+  SLIDE 4
+  ========================================= -->
+
+  <section class="slide" id="s4">
+
+    <div id="cakeTitle">
+      Happy Birthday My Love 🎂
+    </div>
+
+    <div id="cakeWrap">
+
+      <svg id="cake" viewBox="0 0 320 260" width="320" height="260">
+
+        <ellipse cx="160" cy="250" rx="120" ry="14" fill="rgba(0,0,0,.3)"/>
+
+        <!-- bottom -->
+        <rect x="50" y="170" width="220" height="75" rx="10" fill="#ff8fab"/>
+
+        <!-- top -->
+        <rect x="90" y="100" width="140" height="75" rx="10" fill="#ffd6e0"/>
+
+        <!-- candle -->
+        <g id="candle">
+
+          <rect x="150" y="60" width="20" height="40" rx="5" fill="#ff4d6d"/>
+
+          <line x1="160" y1="60" x2="160" y2="50" stroke="#333"/>
+
+          <g id="flame">
+            <ellipse cx="160" cy="42" rx="8" ry="12" fill="#ffeb3b">
+              <animate attributeName="ry" values="12;14;10;12" dur=".7s" repeatCount="indefinite"/>
+            </ellipse>
+
+            <ellipse cx="160" cy="44" rx="4" ry="7" fill="#ff9800"/>
+          </g>
+
+        </g>
+
+        <!-- deco group -->
+        <g id="decorations"></g>
+
+      </svg>
+
+    </div>
+
+    <div id="cakeHint">
+      click cake to decorate • click candle to blow ✨
+    </div>
+
+  </section>
+
+</div>
+
+<!-- =========================================
+POPUP
+========================================= -->
+
+<div id="popup">
+
+  <div class="card">
+
+    <div class="popup-title">
+      Happy Birthday 💖
+    </div>
+
+    <div style="font-size:1.1rem;line-height:1.8">
+      I hope your days are always filled with happiness,
+      warmth, and love.
+
+      <br><br>
+
+      Thank you for being part of my life 🌿
+    </div>
+
+    <div style="font-size:3rem;margin-top:20px">
+      🎂✨🌸
+    </div>
+
+    <button class="close">
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================
+FLOATING ITEMS
+========================================= */
+
+const bg = document.getElementById('bg');
+
+const icons = [
+  '🍃','🌿','🌸','✨','💚','🌷','🌺','🍀'
+];
+
+for(let i=0;i<35;i++){
+
+  const d = document.createElement('div');
+
+  d.className = 'float-item';
+
+  d.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+
+  d.style.left = Math.random()*100 + '%';
+
+  d.style.fontSize = (1 + Math.random()*1.5) + 'rem';
+
+  d.style.animationDuration = (8 + Math.random()*10) + 's';
+
+  d.style.animationDelay = Math.random()*8 + 's';
+
+  bg.appendChild(d);
+}
+
+/* =========================================
+SLIDES
+========================================= */
+
+const slides = document.querySelectorAll('.slide');
+const dots = document.getElementById('dots');
+
+let current = 0;
+
+slides.forEach((_,i)=>{
+
+  const d = document.createElement('div');
+
+  d.className = 'dot' + (i===0?' active':'');
+
+  d.onclick = ()=>go(i);
+
+  dots.appendChild(d);
+});
+
+function go(n){
+
+  slides[current].classList.remove('active');
+
+  current = (n + slides.length) % slides.length;
+
+  slides[current].classList.add('active');
+
+  document.querySelectorAll('.dot')
+    .forEach((d,i)=>{
+      d.classList.toggle('active',i===current);
+    });
+
+  if(current===3){
+    audio.play().catch(()=>{});
+  }
+}
+
+document.getElementById('next').onclick = ()=>go(current+1);
+document.getElementById('prev').onclick = ()=>go(current-1);
+
+document.addEventListener('keydown',e=>{
+
+  if(document.body.classList.contains('locked')) return;
+
+  if(e.key==='ArrowRight') go(current+1);
+  if(e.key==='ArrowLeft') go(current-1);
+});
+
+/* =========================================
+GAME
+========================================= */
+
+const game = document.getElementById('game');
+
+const score = document.getElementById('score');
+
+const needed = 8;
+
+let caught = 0;
+
+for(let i=0;i<needed;i++){
+
+  const d = document.createElement('div');
+
+  score.appendChild(d);
+}
+
+function spawn(){
+
+  if(caught >= needed) return;
+
+  const t = document.createElement('div');
+
+  t.className = 'target';
+
+  t.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+
+  t.style.left =
+    Math.random() * (game.clientWidth - 40) + 'px';
+
+  t.style.top =
+    Math.random() * (game.clientHeight - 40) + 'px';
+
+  t.onclick = ()=>{
+
+    t.remove();
+
+    score.children[caught].classList.add('on');
+
+    caught++;
+
+    if(caught >= needed){
+
+      document.getElementById('passwordBox')
+        .style.display='block';
+
+    }else{
+
+      spawn();
+    }
+  };
+
+  game.appendChild(t);
+
+  setTimeout(()=>{
+    if(t.parentNode){
+      t.remove();
+      spawn();
+    }
+  },2500);
+}
+
+spawn();
+spawn();
+
+/* =========================================
+PASSWORD
+========================================= */
+
+document.getElementById('openBtn').onclick = ()=>{
+
+  const val = document.getElementById('pw').value;
+
+  if(val === '121001'){
+
+    document.body.classList.remove('locked');
+
+    document.getElementById('passwordBox').innerHTML =
+      '<div style="font-size:2rem">🌿 Welcome ✨</div>';
+
+    setTimeout(()=>{
+      go(1);
+    },800);
+
+  }else{
+
+    document.getElementById('err').innerHTML =
+      'Wrong password 🌸';
+  }
+};
+
+/* =========================================
+AUDIO START
+========================================= */
+
+const audio = document.getElementById('audio');
+
+document.body.addEventListener('click',()=>{
+
+  audio.play().catch(()=>{});
+
+},{once:true});
+
+/* =========================================
+CAKE PARALLAX
+========================================= */
+
+const s4 = document.getElementById('s4');
+
+const cakeWrap = document.getElementById('cakeWrap');
+
+s4.addEventListener('mousemove',e=>{
+
+  if(current!==3) return;
+
+  const x =
+    (e.clientX/window.innerWidth - .5) * 30;
+
+  const y =
+    (e.clientY/window.innerHeight - .5) * 30;
+
+  cakeWrap.style.transform =
+    `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+});
+
+/* =========================================
+DECORATION
+========================================= */
+
+const cake = document.getElementById('cake');
+
+cake.addEventListener('click',e=>{
+
+  if(e.target.closest('#candle')){
+    blow();
+    return;
+  }
+
+  decorate(e);
+  explode(e.clientX,e.clientY);
+});
+
+function decorate(e){
+
+  const svg = cake;
+
+  const pt = svg.createSVGPoint();
+
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+
+  const p =
+    pt.matrixTransform(svg.getScreenCTM().inverse());
+
+  const deco =
+    document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'text'
+    );
+
+  deco.setAttribute('x',p.x);
+  deco.setAttribute('y',p.y);
+
+  deco.setAttribute('font-size','18');
+
+  deco.textContent =
+    icons[Math.floor(Math.random()*icons.length)];
+
+  deco.style.pointerEvents='none';
+
+  document.getElementById('decorations')
+    .appendChild(deco);
+
+  deco.animate([
+    {
+      transform:'scale(0)',
+      opacity:0
+    },
+    {
+      transform:'scale(1.4)',
+      opacity:1
+    },
+    {
+      transform:'scale(1)',
+      opacity:1
+    }
+  ],{
+    duration:600,
+    easing:'cubic-bezier(0.175,0.885,0.32,1.275)',
+    fill:'forwards'
+  });
+}
+
+/* =========================================
+EXPLOSION
+========================================= */
+
+function explode(x,y){
+
+  for(let i=0;i<18;i++){
+
+    const d = document.createElement('div');
+
+    d.className='explosion';
+
+    d.innerHTML =
+      icons[Math.floor(Math.random()*icons.length)];
+
+    d.style.left = x+'px';
+    d.style.top = y+'px';
+
+    document.body.appendChild(d);
+
+    const angle = Math.random()*Math.PI*2;
+
+    const dist = 100 + Math.random()*160;
+
+    const tx = Math.cos(angle)*dist;
+
+    const ty = Math.sin(angle)*dist;
+
+    d.animate([
+      {
+        transform:'translate(0,0) scale(0)',
+        opacity:1
+      },
+      {
+        transform:`translate(${tx}px,${ty}px) scale(1.5)`,
+        opacity:0
+      }
+    ],{
+      duration:1200,
+      easing:'cubic-bezier(0.1,0.8,0.3,1)',
+      fill:'forwards'
+    });
+
+    setTimeout(()=>{
+      d.remove();
+    },1300);
+  }
+}
+
+/* =========================================
+CANDLE
+========================================= */
+
+let blown = false;
+
+function blow(){
+
+  if(blown) return;
+
+  blown = true;
+
+  const flame =
+    document.getElementById('flame');
+
+  flame.animate([
+    {
+      opacity:1,
+      transform:'scale(1)'
+    },
+    {
+      opacity:0,
+      transform:'scale(.4)'
+    }
+  ],{
+    duration:500,
+    fill:'forwards'
+  });
+
+  setTimeout(()=>{
+    popup();
+  },700);
+}
+
+/* =========================================
+POPUP
+========================================= */
+
+const popupEl = document.getElementById('popup');
+
+function popup(){
+
+  popupEl.classList.add('show');
+
+  for(let i=0;i<35;i++){
+
+    const b = document.createElement('div');
+
+    b.className='burst';
+
+    b.innerHTML =
+      icons[Math.floor(Math.random()*icons.length)];
+
+    b.style.left = Math.random()*100+'%';
+
+    b.style.fontSize =
+      (1 + Math.random()*1.6)+'rem';
+
+    b.style.animationDuration =
+      (3 + Math.random()*4)+'s';
+
+    popupEl.appendChild(b);
+  }
+}
+
+function closePopup(){
+
+  popupEl.classList.remove('show');
+
+  popupEl.querySelectorAll('.burst')
+    .forEach(e=>e.remove());
+}
+
+document.querySelector('.close')
+  .onclick = closePopup;
+
+popupEl.onclick = e=>{
+
+  if(e.target === popupEl){
+    closePopup();
+  }
+};
+
+</script>
+
+</body>
+</html>
